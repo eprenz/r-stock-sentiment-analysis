@@ -81,8 +81,8 @@ trainData4 <- stockSentiments5[trainIndex3, ]
 testData4 <- stockSentiments5[-trainIndex3, ]
 newStockModel2 <- glm(BorS ~ sentiment + comms_num + score, family=binomial(), data=trainData4)
 newStockModelProbs2 <- predict(newStockModel2, testData4, type = "response")
-newStockModelPred2 <- rep("down", 755)
-newStockModelPred2[newStockModelProbs2 > .5] <- "up"
+newStockModelPred2 <- rep("sell", 767)
+newStockModelPred2[newStockModelProbs2 > .5] <- "buy"
 table(newStockModelPred2, testData4$BorS)
 mean(newStockModelPred2 != testData4$BorS)
 precision <- posPredValue(factor(newStockModelPred2), testData4$BorS)
@@ -97,7 +97,7 @@ trainDataNeg <- Stocks4[trainIndexNeg, ]
 testDataNeg <- Stocks4[-trainIndexNeg, ]
 newStockModelNeg <- glm(BorS ~ sentiment + comms_num + score, family=binomial(), data=trainDataNeg)
 newStockModelProbsNeg <- predict(newStockModel2, testDataNeg, type = "response")
-newStockModelPredNeg <- rep("sell", 257)
+newStockModelPredNeg <- rep("sell", 274)
 newStockModelPredNeg[newStockModelProbsNeg > .5] <- "buy"
 table(newStockModelPredNeg, testDataNeg$BorS)
 mean(newStockModelPredNeg != testDataNeg$BorS)
@@ -110,7 +110,7 @@ trainDataPos <- Stocks5[trainIndexPos, ]
 testDataPos <- Stocks5[-trainIndexPos, ]
 newStockModelPos <- glm(BorS ~ sentiment + comms_num + score, family=binomial(), data=trainDataPos)
 newStockModelProbsPos <- predict(newStockModelPos, testDataPos, type = "response")
-newStockModelPredPos <- rep("sell", 499)
+newStockModelPredPos <- rep("sell", 492)
 newStockModelPredPos[newStockModelProbsPos > .5] <- "buy"
 table(newStockModelPredPos, testDataPos$BorS)
 mean(newStockModelPredPos != testDataPos$BorS)
@@ -122,7 +122,7 @@ trainDataBorS <- stockSentiments5[trainIndex3, ]
 testDataBorS <- stockSentiments5[-trainIndex3, ]
 newStockModelBorS <- glm(direction ~ net + comms_num + score, family=binomial(), data=trainDataBorS)
 newStockModelProbsBorS <- predict(newStockModelBorS, testDataBorS, type = "response")
-newStockModelPredBorS <- rep("down", 755)
+newStockModelPredBorS <- rep("down", 767)
 newStockModelPredBorS[newStockModelProbsBorS > .5] <- "up"
 table(newStockModelPredBorS, testData4$direction)
 mean(newStockModelPredBorS != testData4$direction)
