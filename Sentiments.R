@@ -74,7 +74,8 @@ stockSentiments3 <- splitStocks %>% mutate(net = close - open)
 stockSentiments4 <- stockSentiments3 %>% mutate(BorS = ifelse(net > 0, "buy", "sell")) 
 stockSentiments5 <- subset(stockSentiments4, open != 0 & close != 0)
 stockSentiments5$BorS <- factor(stockSentiments5$BorS)
-pairs(~ score + comms_num + sentiment + net + BorS, data=stockSentiments6)
+pairs(~ score + comms_num + sentiment + net + BorS, data=stockSentiments5)
+#If the API gives you too many requests use the dataset I gave and read it in naming it stockSentiments5. Do it from this point.
 trainIndex3 <- createDataPartition(stockSentiments5$sentiment, p = .8, list = FALSE)
 trainData4 <- stockSentiments5[trainIndex3, ]
 testData4 <- stockSentiments5[-trainIndex3, ]
@@ -89,8 +90,8 @@ recall <- sensitivity(factor(newStockModelPred2), testData4$BorS)
 fScore <- (2 * precision * recall) / (precision + recall)
 errorAnalysis <- data.frame(Model = "Logistic Regression", accuracy = 0.5682119, RMSE = sqrt (mean (newStockModel2$residuals^2)), precision = precision, recall = recall, fScore = fScore)
 
-Stocks4 <- subset(stocks3, direction != "up")
-Stocks5 <- subset(stocks3, direction != "down")
+Stocks4 <- subset(stockSentiments5, direction != "up")
+Stocks5 <- subset(stockSentiments5, direction != "down")
 trainIndexNeg <- createDataPartition(Stocks4$sentiment, p = .8, list = FALSE)
 trainDataNeg <- Stocks4[trainIndexNeg, ]
 testDataNeg <- Stocks4[-trainIndexNeg, ]
@@ -117,8 +118,8 @@ posPrecision <- posPredValue(factor(newStockModelPredPos), testDataPos$BorS) #Pr
 posRecall <- sensitivity(factor(newStockModelPredPos), testDataPos$BorS) #Recall
 posF <- (2 * posPrecision * posRecall) / (posPrecision + posRecall)
 
-trainDataBorS <- stocks3[trainIndex3, ]
-testDataBorS <- stocks3[-trainIndex3, ]
+trainDataBorS <- stockSentiments5[trainIndex3, ]
+testDataBorS <- stockSentiments5[-trainIndex3, ]
 newStockModelBorS <- glm(direction ~ net + comms_num + score, family=binomial(), data=trainDataBorS)
 newStockModelProbsBorS <- predict(newStockModelBorS, testDataBorS, type = "response")
 newStockModelPredBorS <- rep("down", 755)
